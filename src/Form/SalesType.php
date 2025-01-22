@@ -2,19 +2,20 @@
 
 namespace App\Form;
 
-use App\Entity\Album;
+use App\Entity\Sales;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AlbumType extends AbstractType
+class SalesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('auteur')
-            ->add('date', null, [
+            ->add('product_id')
+            ->add('quantity')
+            ->add('total_price')
+            ->add('sale_date', null, [
                 'widget' => 'single_text'
             ])
         ;
@@ -23,7 +24,7 @@ class AlbumType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Album::class,
+            'data_class' => Sales::class,
         ]);
     }
 }
