@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-class Users
+class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -83,5 +85,24 @@ class Users
         $this->created_at = $created_at;
 
         return $this;
+    }
+
+    // Implémentations des méthodes UserInterface
+    public function getRoles(): array
+    {
+        // Par défaut, tous les utilisateurs ont le rôle ROLE_USER
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Effacer les données sensibles si nécessaire
+    }
+
+    // Cette méthode est obligatoire pour l'interface UserInterface
+    public function getUserIdentifier(): string
+    {
+        // Retourne le champ utilisé pour identifier l'utilisateur
+        return $this->username;
     }
 }
