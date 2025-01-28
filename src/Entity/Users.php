@@ -15,17 +15,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $username = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     public function getId(): ?int
     {
@@ -87,11 +90,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Implémentations des méthodes UserInterface
     public function getRoles(): array
     {
-        // Par défaut, tous les utilisateurs ont le rôle ROLE_USER
-        return ['ROLE_USER'];
+        // Ajoute automatiquement le rôle ROLE_USER s'il n'est pas déjà défini
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function eraseCredentials(): void
@@ -99,7 +111,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         // Effacer les données sensibles si nécessaire
     }
 
-    // Cette méthode est obligatoire pour l'interface UserInterface
     public function getUserIdentifier(): string
     {
         // Retourne le champ utilisé pour identifier l'utilisateur

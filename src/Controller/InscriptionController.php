@@ -21,26 +21,33 @@ class InscriptionController extends AbstractController
     ): Response {
         $user = new Users();
 
-        // Création du formulaire
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hacher le mot de passe
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $user->getPassword()
-            );
+            $existingUser = $entityManager->getRepository(Users::class)->findOneBy(['username' => $user->getUsername()]);
+            $existingEmail = $entityManager->getRepository(Users::class)->findOneBy(['email' => $user->getEmail()]);
+
+            if ($existingUser) {
+                $this->addFlash('error', 'Ce nom d\'utilisateur est déjà pris.');
+                return $this->redirectToRoute('app_inscription');
+            }
+
+            if ($existingEmail) {
+                $this->addFlash('error', 'Cet email est déjà utilisé.');
+                return $this->redirectToRoute('app_inscription');
+            }
+
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
-
-            // Définir la date de création
             $user->setCreatedAt(new \DateTimeImmutable());
+            $user->setRoles(['ROLE_USER']);
 
-            // Enregistrer l'utilisateur en base de données
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Rediriger vers la page de connexion (ou autre)
+            $this->addFlash('success', 'Inscription réussie. Vous pouvez maintenant vous connecter.');
+
             return $this->redirectToRoute('app_login');
         }
 
@@ -49,4 +56,3 @@ class InscriptionController extends AbstractController
         ]);
     }
 }
-

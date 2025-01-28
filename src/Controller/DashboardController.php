@@ -1,18 +1,26 @@
 <?php
 
+// src/Controller/DashboardController.php
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
 {
-    #[Route('/', name: 'app_dashboard')]
+    #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
+        $user = $this->getUser(); // Récupérer l'utilisateur connecté
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
         return $this->render('dashboard/index.html.twig', [
-            'controller_name' => 'DashboardController',
+            'user' => $user,
         ]);
     }
 }
+
