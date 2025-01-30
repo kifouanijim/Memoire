@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <style>
+        .dashboard-wrapper {
+            margin: 2em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Fond semi-transparent pour améliorer la lisibilité */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .dashboard-wrapper h1 {
+            margin-bottom: 1em;
+        }
+
+        .dashboard-wrapper .dashboard-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .dashboard-wrapper .dashboard-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .dashboard-wrapper .dashboard-links a:hover {
+            background: #0056b3;
+        }
+    </style>
+
+    <div class="dashboard-wrapper">
+        <h1>Bienvenue sur le ALBUM BOARD</h1>
+
+        <div class="dashboard-links">
+            
+        </div>
+    </div>
+{% endblock %}
