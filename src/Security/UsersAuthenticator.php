@@ -52,9 +52,9 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
 
         return new Passport(
             new UserBadge($email, function ($userIdentifier) {
-                $user = $this->userRepository->findOneByEmail($userIdentifier);
+                $user = $this->userRepository->findOneBy(['email' => $userIdentifier]);
                 if (!$user) {
-                    $this->logger->warning("Utilisateur non trouvé : {email}", ['email' => $userIdentifier]);
+                    throw new \Symfony\Component\Security\Core\Exception\UserNotFoundException("Utilisateur non trouvé.");
                 }
                 return $user;
             }),
@@ -72,7 +72,14 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        $this->logger->info("Connexion réussie pour : {email}", ['email' => $token->getUser()->getUserIdentifier()]);
+        $user = $token->getUser();
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            $this->logger->info("Connexion réussie pour un administrateur : {email}", ['email' => $user->getUserIdentifier()]);
+            return new RedirectResponse($this->urlGenerator->generate('app_admin'));
+        }
+
+        $this->logger->info("Connexion réussie pour un utilisateur : {email}", ['email' => $user->getUserIdentifier()]);
 
         return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
     }

@@ -38,10 +38,14 @@ class InscriptionController extends AbstractController
                 return $this->redirectToRoute('app_inscription');
             }
 
+            // Détermination du rôle en fonction de l'email
+            $email = $user->getEmail();
+            $role = str_contains($email, '@certideal.com') ? 'ROLE_ADMIN' : 'ROLE_USER';
+
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
             $user->setCreatedAt(new \DateTimeImmutable());
-            $user->setRoles(['ROLE_USER']);
+            $user->setRoles([$role]); // Attribution du rôle
 
             $entityManager->persist($user);
             $entityManager->flush();
