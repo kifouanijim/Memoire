@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reviews;
-use App\Form\ReviewsType;
+use App\Form\Reviews1Type;
 use App\Repository\ReviewsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,12 +12,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/reviews')]
-final class ReviewsController extends AbstractController{
+final class ReviewsController extends AbstractController
+{
     #[Route(name: 'app_reviews_index', methods: ['GET'])]
     public function index(ReviewsRepository $reviewsRepository): Response
     {
+        $user = $this->getUser();
         return $this->render('reviews/index.html.twig', [
             'reviews' => $reviewsRepository->findAll(),
+            'user_id' => $user ? $user->getId() : null, // Récupère l'ID du user connecté
         ]);
     }
 
@@ -25,7 +28,7 @@ final class ReviewsController extends AbstractController{
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $review = new Reviews();
-        $form = $this->createForm(ReviewsType::class, $review);
+        $form = $this->createForm(Reviews1Type::class, $review);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -52,7 +55,7 @@ final class ReviewsController extends AbstractController{
     #[Route('/{id}/edit', name: 'app_reviews_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reviews $review, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ReviewsType::class, $review);
+        $form = $this->createForm(Reviews1Type::class, $review);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

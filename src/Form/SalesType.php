@@ -6,6 +6,7 @@ use App\Entity\Sales;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class SalesType extends AbstractType
 {
@@ -18,6 +19,9 @@ class SalesType extends AbstractType
             ->add('sale_date', null, [
                 'widget' => 'single_text'
             ])
+            ->add('user', HiddenType::class, [ // Champ caché pour stocker l'ID utilisateur
+                'mapped' => false, 
+            ]);
         ;
     }
 

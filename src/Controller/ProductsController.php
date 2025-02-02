@@ -16,15 +16,23 @@ final class ProductsController extends AbstractController{
     #[Route(name: 'app_products_index', methods: ['GET'])]
     public function index(ProductsRepository $productsRepository): Response
     {
+        $user = $this->getUser();
         return $this->render('products/index.html.twig', [
             'products' => $productsRepository->findAll(),
+            'user_id' => $user ? $user->getId() : null, // Récupère l'ID du user connecté
         ]);
     }
 
     #[Route('/new', name: 'app_products_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser(); // Récupérer l'utilisateur connecté
         $product = new Products();
+        
+        if ($user) {
+            $product->setUser($user); // Associer l'utilisateur au produit
+        }
+
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
@@ -40,6 +48,7 @@ final class ProductsController extends AbstractController{
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_products_show', methods: ['GET'])]
     public function show(Products $product): Response

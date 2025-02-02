@@ -16,8 +16,10 @@ final class SalesController extends AbstractController{
     #[Route(name: 'app_sales_index', methods: ['GET'])]
     public function index(SalesRepository $salesRepository): Response
     {
+        $user = $this->getUser();
         return $this->render('sales/index.html.twig', [
             'sales' => $salesRepository->findAll(),
+            'user_id' => $user ? $user->getId() : null, // Récupère l'ID du user connecté
         ]);
     }
 

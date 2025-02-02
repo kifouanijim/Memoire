@@ -6,6 +6,9 @@ use App\Entity\Products;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+//use App\Form\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+
 
 class ProductsType extends AbstractType
 {
@@ -18,6 +21,9 @@ class ProductsType extends AbstractType
             ->add('created_at', null, [
                 'widget' => 'single_text'
             ])
+            ->add('user', HiddenType::class, [ // Champ caché pour stocker l'ID utilisateur
+                'mapped' => false, 
+            ]);
         ;
     }
 
