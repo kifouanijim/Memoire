@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SalesRepository::class)]
+#[ORM\HasLifecycleCallbacks]  // Indique que cette entité a des callbacks Doctrine
 class Sales
 {
     #[ORM\Id]
@@ -14,8 +15,8 @@ class Sales
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $product_id = null;
+    #[ORM\Column(length: 255)]
+    private ?string $product_id = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
@@ -23,13 +24,12 @@ class Sales
     #[ORM\Column]
     private ?float $total_price = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $sale_date = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]  // Assure que la date ne change pas après création
+    private ?\DateTimeImmutable $sale_date = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
-
 
     public function getUser(): ?User
     {
@@ -47,22 +47,14 @@ class Sales
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getProductId(): ?int
+    public function getProductId(): ?string
     {
         return $this->product_id;
     }
 
-    public function setProductId(int $product_id): static
+    public function setProductId(string $product_id): static
     {
         $this->product_id = $product_id;
-
         return $this;
     }
 
@@ -74,7 +66,6 @@ class Sales
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
-
         return $this;
     }
 
@@ -86,19 +77,17 @@ class Sales
     public function setTotalPrice(float $total_price): static
     {
         $this->total_price = $total_price;
-
         return $this;
     }
 
-    public function getSaleDate(): ?\DateTimeInterface
+    public function getSaleDate(): ?\DateTimeImmutable
     {
         return $this->sale_date;
     }
 
-    public function setSaleDate(\DateTimeInterface $sale_date): static
+    #[ORM\PrePersist]
+    public function setSaleDate(): void
     {
-        $this->sale_date = $sale_date;
-
-        return $this;
+        $this->sale_date = new \DateTimeImmutable();
     }
 }

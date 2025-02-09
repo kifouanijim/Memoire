@@ -13,15 +13,10 @@ class Reviews1Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('user_id')
+            //->add('user_id')
             ->add('product_id')
-            ->add('rating')
             ->add('comment')
             ->add('sentiment')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-                
-            ])
             ->add('user', HiddenType::class, [ // Champ caché pour stocker l'ID utilisateur
                 'mapped' => false, 
             ]);

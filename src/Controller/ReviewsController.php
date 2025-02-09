@@ -30,19 +30,25 @@ final class ReviewsController extends AbstractController
         $review = new Reviews();
         $form = $this->createForm(Reviews1Type::class, $review);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser(); // Récupérer l'utilisateur connecté
+            if ($user) {
+                $review->setUser($user);
+            }
+    
             $entityManager->persist($review);
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_reviews_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->render('reviews/new.html.twig', [
             'review' => $review,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_reviews_show', methods: ['GET'])]
     public function show(Reviews $review): Response

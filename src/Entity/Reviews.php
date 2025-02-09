@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReviewsRepository::class)]
+#[ORM\HasLifecycleCallbacks] // Active les événements Doctrine
 class Reviews
 {
     #[ORM\Id]
@@ -15,13 +16,7 @@ class Reviews
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $user_id = null;
-
-    #[ORM\Column]
     private ?int $product_id = null;
-
-    #[ORM\Column]
-    private ?int $rating = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $comment = null;
@@ -31,10 +26,10 @@ class Reviews
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
-
 
     public function getUser(): ?User
     {
@@ -52,25 +47,6 @@ class Reviews
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
     public function getProductId(): ?int
     {
         return $this->product_id;
@@ -79,19 +55,6 @@ class Reviews
     public function setProductId(int $product_id): static
     {
         $this->product_id = $product_id;
-
-        return $this;
-    }
-
-    public function getRating(): ?int
-    {
-        return $this->rating;
-    }
-
-    public function setRating(int $rating): static
-    {
-        $this->rating = $rating;
-
         return $this;
     }
 
@@ -103,7 +66,6 @@ class Reviews
     public function setComment(string $comment): static
     {
         $this->comment = $comment;
-
         return $this;
     }
 
@@ -115,7 +77,6 @@ class Reviews
     public function setSentiment(string $sentiment): static
     {
         $this->sentiment = $sentiment;
-
         return $this;
     }
 
@@ -124,10 +85,9 @@ class Reviews
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    #[ORM\PrePersist] // Automatiquement défini avant insertion
+    public function setCreatedAtValue(): void
     {
-        $this->created_at = $created_at;
-
-        return $this;
+        $this->created_at = new \DateTimeImmutable();
     }
 }

@@ -31,6 +31,11 @@ final class SalesController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser(); // Récupérer l'utilisateur connecté
+            if ($user) {
+                $sale->setUser($user);
+            }
+    
             $entityManager->persist($sale);
             $entityManager->flush();
 
