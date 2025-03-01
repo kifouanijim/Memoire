@@ -20,7 +20,7 @@ final class ReviewsController extends AbstractController
         $user = $this->getUser();
         return $this->render('reviews/index.html.twig', [
             'reviews' => $reviewsRepository->findAll(),
-            'user_id' => $user ? $user->getId() : null, // Récupère l'ID du user connecté
+            'user_id' => $user ? $user->getId() : null,
         ]);
     }
 
@@ -30,25 +30,37 @@ final class ReviewsController extends AbstractController
         $review = new Reviews();
         $form = $this->createForm(Reviews1Type::class, $review);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser(); // Récupérer l'utilisateur connecté
+            $user = $this->getUser();
             if ($user) {
                 $review->setUser($user);
             }
-    
+
+            $sentiment = $form->get('sentiment')->getData();
+
+            // Vérification et conversion en tableau si nécessaire
+            if (is_string($sentiment)) {
+                $sentiment = array_map('trim', explode(',', $sentiment));
+            }
+
+            if (!is_array($sentiment)) {
+                $sentiment = [$sentiment];
+            }
+
+            $review->setSentiment($sentiment);
+
             $entityManager->persist($review);
             $entityManager->flush();
-    
+
             return $this->redirectToRoute('app_reviews_index', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('reviews/new.html.twig', [
             'review' => $review,
             'form' => $form,
         ]);
     }
-    
 
     #[Route('/{id}', name: 'app_reviews_show', methods: ['GET'])]
     public function show(Reviews $review): Response
@@ -65,6 +77,12 @@ final class ReviewsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $sentiment = $form->get('sentiment')->getData();
+            if (!is_array($sentiment)) {
+                $sentiment = explode(',', $sentiment);
+            }
+            $review->setSentiment(array_map('trim', $sentiment));
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_reviews_index', [], Response::HTTP_SEE_OTHER);

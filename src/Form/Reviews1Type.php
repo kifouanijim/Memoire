@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Reviews;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,7 +17,15 @@ class Reviews1Type extends AbstractType
             //->add('user_id')
             ->add('product_id')
             ->add('comment')
-            ->add('sentiment')
+            ->add('sentiment', ChoiceType::class, [
+                'choices'  => [
+                    'Normal' => 'normal',
+                    'Urgent' => 'urgent',
+                    'Prioritaire' => 'prioritaire',
+                ],
+                'expanded' => true, // Affichage sous forme de cases à cocher
+                'multiple' => true, // Permet de sélectionner plusieurs valeurs
+                ])
             ->add('user', HiddenType::class, [ // Champ caché pour stocker l'ID utilisateur
                 'mapped' => false, 
             ]);

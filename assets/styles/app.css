@@ -3,13 +3,14 @@ body {
     background: linear-gradient(135deg, #667eea, #764ba2);
     font-family: 'Poppins', sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px;
 }
 
-/* 🌟 Logo en haut à gauche */
+/* 🌟 Logo */
 .logo-container {
     position: absolute;
     top: 20px;
@@ -21,96 +22,120 @@ body {
     height: auto;
 }
 
-/* 🌟 Conteneur du formulaire */
-.login-container {
-    width: 100%;
-    max-width: 400px;
-    padding: 30px;
+/* 🌟 Conteneur principal */
+.main-container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* 🌟 Sections pour Reviews et Sales */
+.section {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(15px);
     border-radius: 12px;
-    text-align: center;
+    padding: 20px;
     box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s;
 }
 
-.login-container:hover {
+.section:hover {
     transform: translateY(-5px);
     box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.4);
 }
 
-/* 🌟 Titre */
-.login-container h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
+/* 🌟 Titres */
+.section h2 {
+    font-size: 24px;
     color: #fff;
-    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
-/* 🌟 Champs de saisie */
-.input-group {
-    margin-bottom: 20px;
-    text-align: left;
+/* 🌟 Grille des Reviews et Sales */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
 
-label {
-    font-weight: 600;
-    color: #fff;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-control {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
+/* 🌟 Style des Cartes */
+.card {
     background: rgba(255, 255, 255, 0.3);
-    color: #fff;
-    outline: none;
-    transition: all 0.3s ease-in-out;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
 }
 
-.form-control:focus {
-    background: rgba(255, 255, 255, 0.4);
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.6);
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* 🌟 Bouton de connexion */
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
+/* 🌟 Contenu des cartes */
+.card h3 {
     font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    color: #fff;
+    margin-bottom: 10px;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(135deg, #ff5c77, #ff6f9b);
-    transform: scale(1.05);
-    box-shadow: 0px 4px 15px rgba(255, 92, 119, 0.5);
-}
-
-/* 🌟 Lien d'inscription */
-.signup-link {
-    margin-top: 15px;
+.card p {
     font-size: 14px;
+    color: #f0f0f0;
+    margin-bottom: 8px;
+}
+
+/* 🌟 Badges de sentiment */
+.sentiment {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.sentiment.normal {
+    background: #4caf50;
     color: #fff;
 }
 
-.signup-link a {
-    font-weight: bold;
-    text-decoration: underline;
-    color: #ff7eb3;
-    transition: color 0.3s;
+.sentiment.urgent {
+    background: #ff9800;
+    color: #fff;
 }
 
-.signup-link a:hover {
-    color: #ff5c77;
+.sentiment.prioritaire {
+    background: #f44336;
+    color: #fff;
+}
+
+/* 🌟 Boutons d'action */
+.btn-action {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-edit {
+    background: #ffeb3b;
+    color: #000;
+}
+
+.btn-delete {
+    background: #f44336;
+    color: #fff;
+}
+
+.btn-action:hover {
+    opacity: 0.8;
 }

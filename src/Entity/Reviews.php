@@ -21,8 +21,9 @@ class Reviews
     #[ORM\Column(type: Types::TEXT)]
     private ?string $comment = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $sentiment = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $sentiment = [];
+
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -69,16 +70,18 @@ class Reviews
         return $this;
     }
 
-    public function getSentiment(): ?string
+    public function getSentiment(): array
     {
         return $this->sentiment;
     }
 
-    public function setSentiment(string $sentiment): static
+    public function setSentiment(array $sentiment): static
     {
         $this->sentiment = $sentiment;
         return $this;
     }
+
+    
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {

@@ -1,0 +1,46 @@
+{# templates/stats/stats.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Critiques</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Style pour ajuster la taille du graphique */
+        #reviewsChart {
+            width: 600px;  /* Largeur fixe du graphique */
+            height: 400px; /* Hauteur fixe du graphique */
+            margin: 0 auto; /* Centrer le graphique horizontalement */
+        }
+    </style>
+</head>
+<body>
+    <h1>Nombre de critiques par jour</h1>
+    <canvas id="reviewsChart"></canvas>
+    
+    <script>
+        const ctx = document.getElementById('reviewsChart').getContext('2d');
+        const labels = JSON.parse('{{ dates | raw }}'); // Récupère les dates depuis les données
+        const data = JSON.parse('{{ counts | raw }}'); // Récupère les comptes depuis les données
+
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Reviews per Day',
+                    data: data,
+                    backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#57FF33', '#5733FF'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: false,  // Désactive le redimensionnement automatique
+                maintainAspectRatio: true,  // Garde l'aspect ratio intact
+            }
+        });
+    </script>
+</body>
+</html>

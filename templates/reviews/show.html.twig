@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <th>Comment</th>
-                <td>{{ review.comment }}</td>
+                <td>{{ review.sentiment|join(', ') }}</td>
             </tr>
             <tr>
                 <th>Sentiment</th>
