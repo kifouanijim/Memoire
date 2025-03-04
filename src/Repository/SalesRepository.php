@@ -40,4 +40,35 @@ class SalesRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function getSalesCountByDay(): array
+{
+    $conn = $this->getEntityManager()->getConnection();
+    $sql = "
+        SELECT DATE(sale_date) AS day, COUNT(id) AS sales_count
+        FROM sales
+        GROUP BY day
+        ORDER BY day ASC
+    ";
+    $stmt = $conn->prepare($sql);
+    $result = $stmt->executeQuery();
+    return $result->fetchAllAssociative();
+}
+
+
+public function getSalesCountByMonth(): array
+{
+    $conn = $this->getEntityManager()->getConnection();
+    $sql = "
+        SELECT DATE_FORMAT(sale_date, '%Y-%m') AS month, COUNT(id) AS sales_count
+        FROM sales
+        GROUP BY DATE_FORMAT(sale_date, '%Y-%m')
+        ORDER BY month ASC
+
+    ";
+    $stmt = $conn->prepare($sql);
+    $result = $stmt->executeQuery();
+    return $result->fetchAllAssociative();
+}
+
+
 }

@@ -8,6 +8,8 @@ use App\Repository\ReviewsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\SalesRepository;
+
 
 class AdminController extends AbstractController
 {
@@ -34,6 +36,20 @@ class AdminController extends AbstractController
             'counts' => json_encode($counts),
         ]);
     }
+    #[Route('/admin/sales-stats', name: 'admin_sales_stats')]
+    public function salesStats(SalesRepository $salesRepository): Response
+    {
+        $salesByDay = $salesRepository->getSalesCountByDay();
+        $salesByMonth = $salesRepository->getSalesCountByMonth();
+
+        return $this->render('stats/sales_stats.html.twig', [
+            'salesByDay' => json_encode(array_column($salesByDay, 'sales_count')),
+            'dates' => json_encode(array_column($salesByDay, 'day')),
+            'salesByMonth' => json_encode(array_column($salesByMonth, 'sales_count')),
+            'months' => json_encode(array_column($salesByMonth, 'month')),
+        ]);
+    }
+
 }
 
 

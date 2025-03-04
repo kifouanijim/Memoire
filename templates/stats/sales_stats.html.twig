@@ -1,0 +1,101 @@
+{# templates/stats/sales_stats.html.twig #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Ventes</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .charts-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .chart-box {
+            flex: 1;
+            max-width: 600px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Statistiques des Ventes</h1>
+
+    <div class="charts-container">
+        <div class="chart-box">
+            <h2>Ventes par Jour</h2>
+            <canvas id="salesByDayChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>Ventes par Mois</h2>
+            <canvas id="salesByMonthChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Récupération des données PHP en JSON
+        const salesByDay = JSON.parse('{{ salesByDay | raw }}');
+        const dates = JSON.parse('{{ dates | raw }}');
+
+        const salesByMonth = JSON.parse('{{ salesByMonth | raw }}');
+        const months = JSON.parse('{{ months | raw }}');
+
+        // Graphique en barres pour les ventes par jour
+        new Chart(document.getElementById('salesByDayChart'), {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Nombre de ventes par jour',
+                    data: salesByDay,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Graphique en ligne pour les ventes par mois
+        new Chart(document.getElementById('salesByMonthChart'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Nombre de ventes par mois',
+                    data: salesByMonth,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
