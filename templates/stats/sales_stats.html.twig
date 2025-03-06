@@ -10,6 +10,7 @@
     <style>
         .charts-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
             padding: 20px;
@@ -39,38 +40,84 @@
         </div>
 
         <div class="chart-box">
+            <h2>Nombre de Téléphones Vendus par Jour</h2>
+            <canvas id="phonesSoldByDayChart"></canvas>
+        </div>
+
+        <div class="chart-box">
             <h2>Ventes par Mois</h2>
             <canvas id="salesByMonthChart"></canvas>
         </div>
     </div>
 
     <script>
-        // Récupération des données PHP en JSON
-        const salesByDay = JSON.parse('{{ salesByDay | raw }}');
-        const dates = JSON.parse('{{ dates | raw }}');
+        // Récupération des données JSON depuis PHP
+        const salesByDay = {{ salesByDay|raw }};
+        const salesByMonth = {{ salesByMonth|raw }};
 
-        const salesByMonth = JSON.parse('{{ salesByMonth | raw }}');
-        const months = JSON.parse('{{ months | raw }}');
+        // Extraction des labels et des données
+        const days = salesByDay.map(entry => entry.day);
+        const salesCountByDay = salesByDay.map(entry => entry.sales_count);
+        const phonesSoldByDay = salesByDay.map(entry => entry.total_phones_sold);
+
+        const months = salesByMonth.map(entry => entry.month);
+        const salesCountByMonth = salesByMonth.map(entry => entry.sales_count);
+
+        // Configuration des options globales pour les tooltips
+        const tooltipOptions = {
+            mode: 'index',
+            intersect: false,
+            animation: {
+                duration: 200 // Affichage plus rapide des tooltips
+            },
+            callbacks: {
+                label: function(tooltipItem) {
+                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                }
+            }
+        };
 
         // Graphique en barres pour les ventes par jour
         new Chart(document.getElementById('salesByDayChart'), {
             type: 'bar',
             data: {
-                labels: dates,
+                labels: days,
                 datasets: [{
                     label: 'Nombre de ventes par jour',
-                    data: salesByDay,
+                    data: salesCountByDay,
                     backgroundColor: 'rgba(54, 162, 235, 0.5)',
                     borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
+                    borderWidth: 1,
+                    hoverBorderWidth: 3 // Effet de surbrillance au survol
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true }
-                }
+                scales: { y: { beginAtZero: true } },
+                plugins: { tooltip: tooltipOptions }
+            }
+        });
+
+        // Graphique en barres pour le nombre de téléphones vendus par jour
+        new Chart(document.getElementById('phonesSoldByDayChart'), {
+            type: 'bar',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Nombre total de téléphones vendus par jour',
+                    data: phonesSoldByDay,
+                    backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1,
+                    hoverBorderWidth: 3 // Effet de surbrillance au survol
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } },
+                plugins: { tooltip: tooltipOptions }
             }
         });
 
@@ -81,19 +128,19 @@
                 labels: months,
                 datasets: [{
                     label: 'Nombre de ventes par mois',
-                    data: salesByMonth,
+                    data: salesCountByMonth,
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     fill: true,
-                    tension: 0.4
+                    tension: 0.4,
+                    hoverBorderWidth: 3 // Effet de surbrillance au survol
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true }
-                }
+                scales: { y: { beginAtZero: true } },
+                plugins: { tooltip: tooltipOptions }
             }
         });
     </script>

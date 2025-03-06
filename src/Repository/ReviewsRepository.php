@@ -17,23 +17,40 @@ class ReviewsRepository extends ServiceEntityRepository
     }
     
 
+  
     public function getReviewsCountByDay(): array
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('r.created_at AS day', 'COUNT(r.id) AS review_count')
-            ->groupBy('r.created_at')
+            ->select("r.created_at AS day", "COUNT(r.id) AS review_count")
+            ->groupBy('day')
             ->orderBy('day', 'ASC');
-
+        
         $results = $qb->getQuery()->getResult();
 
-        // Formatage pour ne conserver que la date (année-mois-jour)
-        foreach ($results as &$result) {
-            $result['day'] = $result['day']->format('Y-m-d'); // Formater la date en format "YYYY-MM-DD"
+        // Récupérer les commentaires et utilisateurs séparément
+        $qbComments = $this->createQueryBuilder('r')
+            ->select("r.created_at AS day", "r.comment", "u.username") // Récupérer aussi le nom de l'utilisateur
+            ->join('r.user', 'u') // Joindre avec la table des utilisateurs
+            ->orderBy('day', 'ASC');
+        
+        $commentsResults = $qbComments->getQuery()->getResult();
+
+        // Organiser les commentaires par utilisateur et par jour
+        $commentsByUser = [];
+        foreach ($commentsResults as $row) {
+            $commentsByUser[$row['day']->format('Y-m-d')][$row['username']][] = $row['comment'];
         }
 
-        return $results;
+        // Ajouter les commentaires et les utilisateurs à la liste principale
+        return array_map(fn($result) => [
+            'day' => $result['day']->format('Y-m-d'), // Formatage de la date
+            'review_count' => $result['review_count'],
+            'comments_by_user' => $commentsByUser[$result['day']->format('Y-m-d')] ?? []
+        ], $results);
     }
 
+    
+    
 
 
 
