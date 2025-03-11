@@ -1,17 +1,145 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .chart-box {
+            flex: 1;
+            max-width: 600px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Tableau de Bord Admin</h1>
 
-{% block title %}Hello AdminController!{% endblock %}
-
-{% block body %}
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-{% endblock %}
-
-<div class="AdminController-wrapper">
-        <h1>Bienvenue sur le ALBUM BOARD</h1>
-        <a href="{{ path('app_products_index') }}">Products</a>
-        <a href="{{ path('admin_statistiques') }}" class="button">Les statistiques</a>
-        <a href="{{ path('admin_sales_stats') }}" class="button">Les stats </a>
-        <div class="dashboard-links">
+    <div class="charts-container">
+        <!-- Graphique pour les Reviews -->
+        <div class="chart-box">
+            <h2>Reviews par Jour</h2>
+            <canvas id="reviewsByDayChart"></canvas>
         </div>
-{% endblock %}
+
+        <!-- Graphique pour les Ventes -->
+        <div class="chart-box">
+            <h2>Ventes par Jour</h2>
+            <canvas id="salesByDayChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>Ventes par Mois</h2>
+            <canvas id="salesByMonthChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Récupération des données JSON depuis PHP
+        const reviewsByDay = {{ reviewsByDay|raw }};
+        const commentsByUser = {{ commentsByUser|raw }};
+        const dates = {{ dates|raw }};
+        const salesByDay = {{ salesByDay|raw }};
+        const salesByMonth = {{ salesByMonth|raw }};
+
+        // Graphique en barres pour les Reviews par jour
+        const ctxReviews = document.getElementById('reviewsByDayChart').getContext('2d');
+        new Chart(ctxReviews, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Nombre de reviews par jour',
+                    data: reviewsByDay,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const day = tooltipItem.label;
+                                const comments = commentsByUser[day];
+                                let commentText = '';
+                                for (let user in comments) {
+                                    commentText += `<strong>${user}:</strong> ${comments[user].join('<br>')}<br>`;
+                                }
+                                return commentText;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graphique en barres pour les ventes par jour
+        const ctxSalesDay = document.getElementById('salesByDayChart').getContext('2d');
+        new Chart(ctxSalesDay, {
+            type: 'bar',
+            data: {
+                labels: salesByDay.map(entry => entry.day),
+                datasets: [{
+                    label: 'Nombre de ventes par jour',
+                    data: salesByDay.map(entry => entry.sales_count),
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Graphique en ligne pour les ventes par mois
+        const ctxSalesMonth = document.getElementById('salesByMonthChart').getContext('2d');
+        new Chart(ctxSalesMonth, {
+            type: 'line',
+            data: {
+                labels: salesByMonth.map(entry => entry.month),
+                datasets: [{
+                    label: 'Ventes par Mois',
+                    data: salesByMonth.map(entry => entry.sales_count),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    </script>
+</body>
+</html>

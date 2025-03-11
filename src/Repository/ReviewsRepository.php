@@ -20,6 +20,7 @@ class ReviewsRepository extends ServiceEntityRepository
   
     public function getReviewsCountByDay(): array
     {
+        // Récupérer le nombre de reviews par jour
         $qb = $this->createQueryBuilder('r')
             ->select("r.created_at AS day", "COUNT(r.id) AS review_count")
             ->groupBy('day')
@@ -27,9 +28,9 @@ class ReviewsRepository extends ServiceEntityRepository
         
         $results = $qb->getQuery()->getResult();
 
-        // Récupérer les commentaires et utilisateurs séparément
+        // Récupérer les commentaires et les utilisateurs associés
         $qbComments = $this->createQueryBuilder('r')
-            ->select("r.created_at AS day", "r.comment", "u.username") // Récupérer aussi le nom de l'utilisateur
+            ->select("r.created_at AS day", "r.comment", "u.username") // Récupérer le nom de l'utilisateur et le commentaire
             ->join('r.user', 'u') // Joindre avec la table des utilisateurs
             ->orderBy('day', 'ASC');
         
@@ -41,14 +42,13 @@ class ReviewsRepository extends ServiceEntityRepository
             $commentsByUser[$row['day']->format('Y-m-d')][$row['username']][] = $row['comment'];
         }
 
-        // Ajouter les commentaires et les utilisateurs à la liste principale
+        // Ajouter les commentaires et les utilisateurs aux résultats principaux
         return array_map(fn($result) => [
             'day' => $result['day']->format('Y-m-d'), // Formatage de la date
             'review_count' => $result['review_count'],
-            'comments_by_user' => $commentsByUser[$result['day']->format('Y-m-d')] ?? []
+            'comments_by_user' => $commentsByUser[$result['day']->format('Y-m-d')] ?? [] // Récupérer les commentaires de ce jour
         ], $results);
     }
-
     
     
 

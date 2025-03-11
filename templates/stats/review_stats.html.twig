@@ -1,0 +1,119 @@
+{# templates/stats/review_stats.html.twig #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Reviews</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .chart-box {
+            flex: 1;
+            max-width: 600px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+        #commentsDisplay {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Statistiques des Reviews</h1>
+
+    <div class="charts-container">
+        <div class="chart-box">
+            <h2>Reviews par Jour</h2>
+            <canvas id="reviewsByDayChart"></canvas>
+        </div>
+    </div>
+
+    <div id="commentsDisplay"></div>
+
+    <script>
+        // Récupération des données JSON depuis PHP
+        const reviewsByDay = {{ reviewsByDay|raw }};
+        const commentsByDay = {{ commentsByDay|raw }};
+        const dates = {{ dates|raw }};
+
+        // Extraction des labels et des données
+        const days = dates;
+        const reviewCountByDay = reviewsByDay;
+
+        // Graphique en barres pour les reviews par jour
+        const ctx = document.getElementById('reviewsByDayChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Nombre de reviews par jour',
+                    data: reviewCountByDay,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    hoverBorderWidth: 3 // Effet de surbrillance au survol
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const day = tooltipItem.label;
+                                const comments = commentsByDay[day];
+                                let commentText = '';
+                                for (let user in comments) {
+                                    commentText += `<strong>${user}:</strong> ${comments[user].join('<br>')}<br>`;
+                                }
+                                return commentText;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Affichage des commentaires dynamiques au survol
+        ctx.canvas.addEventListener('mousemove', function(event) {
+            const tooltip = ctx.chart.tooltip;
+            tooltip.setActiveElements([{ datasetIndex: 0, index: tooltip.getActiveElements()[0].index }]);
+            tooltip.update(true);
+
+            const activePoints = tooltip.getActiveElements();
+            if (activePoints.length) {
+                const index = activePoints[0].index;
+                const day = days[index];
+                const comments = commentsByDay[day];
+                let commentText = '';
+                for (let user in comments) {
+                    commentText += `<strong>${user}:</strong> ${comments[user].join('<br>')}<br>`;
+                }
+                document.getElementById('commentsDisplay').innerHTML = commentText;
+            }
+        });
+    </script>
+</body>
+</html>
