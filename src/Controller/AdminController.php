@@ -1,41 +1,43 @@
 <?php
 
-// App\Controller\AdminController.php
-
 namespace App\Controller;
 
 use App\Repository\ReviewsRepository;
+use App\Repository\SalesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\SalesRepository;
 
-#[Route('/admin')] // Préfixe pour toutes les routes
+#[Route('/admin')]
 class AdminController extends AbstractController
 {
-    #[Route('/', name: 'app_admin')] // Route pour le tableau de bord
+    #[Route('/', name: 'app_admin')]
     public function index(ReviewsRepository $reviewsRepository, SalesRepository $salesRepository): Response
     {
-        // Récupérer les statistiques des critiques par jour
+        // Récupération des statistiques des reviews par jour
         $reviewsData = $reviewsRepository->getReviewsCountByDay();
         $dates = array_column($reviewsData, 'day');
-        $counts = array_column($reviewsData, 'review_count');
-        $commentsByUser = [];
-        foreach ($reviewsData as $review) {
-            foreach ($review['comments_by_user'] as $user => $comments) {
-                $commentsByUser[$review['day']][$user] = $comments;
-            }
-        }
 
-        // Récupérer les statistiques des ventes par jour et par mois
+        // Récupération des statistiques des ventes
         $salesByDay = $salesRepository->getSalesCountByDay();
         $salesByMonth = $salesRepository->getSalesCountByMonth();
 
+        // Séparer les données de ventes et de téléphones vendus
+        $salesCountByDay = array_map(fn($sale) => [
+            'day' => $sale['day'],
+            'sales_count' => $sale['sales_count'],
+        ], $salesByDay);
+
+        $phonesSoldByDay = array_map(fn($sale) => [
+            'day' => $sale['day'],
+            'total_phones_sold' => $sale['total_phones_sold'],
+        ], $salesByDay);
+
         return $this->render('admin/index.html.twig', [
             'reviewsByDay' => json_encode(array_map(fn($review) => $review['review_count'], $reviewsData)),
-            'commentsByUser' => json_encode($commentsByUser),
             'dates' => json_encode($dates),
-            'salesByDay' => json_encode($salesByDay, JSON_UNESCAPED_UNICODE),
+            'salesCountByDay' => json_encode($salesCountByDay, JSON_UNESCAPED_UNICODE),
+            'phonesSoldByDay' => json_encode($phonesSoldByDay, JSON_UNESCAPED_UNICODE),
             'salesByMonth' => json_encode($salesByMonth, JSON_UNESCAPED_UNICODE),
         ]);
     }
