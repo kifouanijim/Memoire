@@ -114,7 +114,9 @@
 
         // Calcul des totaux
         const totalSales = salesCountByDay.reduce((acc, curr) => acc + curr.sales_count, 0);
-        const totalPhonesSold = phonesSoldByDay.reduce((acc, curr) => acc + curr.total_phones_sold, 0);
+        const totalPhonesSold = phonesSoldByDay
+        .map(entry => parseInt(entry.total_phones_sold, 10)) // S'assurer que la valeur est bien un nombre
+        .reduce((acc, curr) => acc + curr, 0);
         document.getElementById("totalSales").innerText = totalSales;
         document.getElementById("totalPhonesSold").innerText = totalPhonesSold;
 
