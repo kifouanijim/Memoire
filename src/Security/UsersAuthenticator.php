@@ -78,6 +78,10 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
             $this->logger->info("Connexion réussie pour un administrateur : {email}", ['email' => $user->getUserIdentifier()]);
             return new RedirectResponse($this->urlGenerator->generate('app_admin'));
         }
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            $this->logger->info("Connexion réussie pour un utilisateur : {email}", ['email' => $user->getUserIdentifier()]);
+            return new RedirectResponse($this->urlGenerator->generate('app_dash'));
+        }
 
         $this->logger->info("Connexion réussie pour un utilisateur : {email}", ['email' => $user->getUserIdentifier()]);
 

@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - CertiDeal{% endblock %}
+
+{% block body %}
+<style>
+    .container {
+        margin: 1em auto;
+        max-width: 1200px;
+        width: 95%;
+        font: 18px/1.5 sans-serif;
+    }
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #007bff;
+        padding: 1em;
+        color: white;
+    }
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+    }
+    .navbar a:hover {
+        text-decoration: underline;
+    }
+    .hero {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    .hero h1 {
+        color: #333;
+    }
+    .hero p {
+        font-size: 1.2em;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+    .btn:hover {
+        background: #0056b3;
+    }
+</style>
+
+<div class="navbar">
+    <div><strong>CertiDeal</strong></div>
+    <div>
+        <a href="{{ path('app_admin') }}">Statistiques</a>
+        <a href="#about">À propos</a>
+        <a href="#contact">Contact</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="hero">
+        <h1>Bienvenue chez CertiDeal</h1>
+        <p>Votre expert en reconditionnement et revente de smartphones.</p>
+        <a href="#services" class="btn">Découvrir nos services</a>
+    </div>
+</div>
+{% endblock %}

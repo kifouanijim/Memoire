@@ -41,4 +41,12 @@ class AdminController extends AbstractController
             'salesByMonth' => json_encode($salesByMonth, JSON_UNESCAPED_UNICODE),
         ]);
     }
+    #[Route('/admin/api/reviews/analysis', name: 'admin_reviews_analysis', methods: ['GET'])]
+    public function getReviewsAnalysis(ReviewsRepository $repository): JsonResponse
+    {
+        return $this->json([
+            'wordCloud' => $repository->getMostFrequentWords(),
+            'sentiments' => $repository->getSentimentDistribution(),
+        ]);
+    }
 }
