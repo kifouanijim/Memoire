@@ -11,7 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin')]
 class AdminController extends AbstractController
 {
-    #[Route('/', name: 'app_admin')]
+    
+    #[Route('/admin', name: 'app_admin')]
     public function index(ReviewsRepository $reviewsRepository, SalesRepository $salesRepository): Response
     {
         // Récupération des statistiques des reviews par jour

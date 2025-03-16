@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aide & Contact - Certideal{% endblock %}
+
+{% block body %}
+<style>
+    .help-container { 
+        margin: 2em auto; 
+        max-width: 800px; 
+        width: 100%;
+        font-family: Arial, sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    .help-container h1, .help-container h2 {
+        color: #0056b3; /* Uniformisation de la couleur des titres */
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 1em;
+    }
+    
+    .help-container h2 {
+        font-size: 1.5rem;
+        margin-top: 1.5em;
+    }
+
+    .help-container p, .help-container li {
+        font-size: 1.1rem;
+    }
+
+    .faq-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .faq-list li {
+        background: #f8f9fa;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-box {
+        margin-top: 2em;
+        padding: 20px;
+        background: #f0f8ff;
+        border-radius: 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .contact-box p {
+        font-size: 1.1rem;
+        margin-bottom: 0.7em;
+    }
+
+    .contact-box a {
+        color: #0056b3;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .contact-box a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="help-container">
+    <h1>Besoin d'aide ?</h1>
+    <p>Nous sommes là pour vous aider ! Consultez notre FAQ ou utilisez nos informations de contact ci-dessous.</p>
+
+    <h2>Foire Aux Questions (FAQ)</h2>
+    <ul class="faq-list">
+        <li><strong>📦 Comment suivre ma commande ?</strong><br> Vous pouvez suivre votre commande via votre espace client.</li>
+        <li><strong>🔄 Quelle est la politique de retour ?</strong><br> Vous avez 30 jours pour retourner un produit si vous n'êtes pas satisfait.</li>
+        <li><strong>💬 Comment contacter le service client ?</strong><br> Consultez les informations ci-dessous.</li>
+    </ul>
+
+    <h2>Nous Contacter</h2>
+    <div class="contact-box">
+        <p>📞 <strong>Téléphone :</strong> +33 1 23 45 67 89</p>
+        <p>📧 <strong>Email :</strong> <a href="mailto:support@certideal.com">support@certideal.com</a></p>
+        <p>📍 <strong>Adresse :</strong> 123 Rue des Smartphones, Paris, France</p>
+        <p>⏰ <strong>Horaires :</strong> Lundi - Vendredi, 9h - 18h</p>
+    </div>
+</div>
+{% endblock %}
