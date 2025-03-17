@@ -33,6 +33,7 @@ class AdminController extends AbstractController
             'day' => $sale['day'],
             'total_phones_sold' => $sale['total_phones_sold'],
         ], $salesByDay);
+        $sentimentStats = $reviewsRepository->getSentimentStatistics();
 
         return $this->render('admin/index.html.twig', [
             'reviewsByDay' => json_encode(array_map(fn($review) => $review['review_count'], $reviewsData)),
@@ -40,14 +41,8 @@ class AdminController extends AbstractController
             'salesCountByDay' => json_encode($salesCountByDay, JSON_UNESCAPED_UNICODE),
             'phonesSoldByDay' => json_encode($phonesSoldByDay, JSON_UNESCAPED_UNICODE),
             'salesByMonth' => json_encode($salesByMonth, JSON_UNESCAPED_UNICODE),
+            'sentimentStats' => json_encode($sentimentStats, JSON_UNESCAPED_UNICODE), // Ajout de json_encode ici
         ]);
-    }
-    #[Route('/admin/api/reviews/analysis', name: 'admin_reviews_analysis', methods: ['GET'])]
-    public function getReviewsAnalysis(ReviewsRepository $repository): JsonResponse
-    {
-        return $this->json([
-            'wordCloud' => $repository->getMostFrequentWords(),
-            'sentiments' => $repository->getSentimentDistribution(),
-        ]);
-    }
+    }    
+   
 }

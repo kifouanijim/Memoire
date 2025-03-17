@@ -98,8 +98,8 @@
             </div>
 
             <div class="chart-box">
-                <h2>⭐ Retour par Jour</h2>
-                <canvas id="reviewsByDayChart"></canvas>
+                <h2>📝 Ordre de priorité des retours</h2>
+                <canvas id="sentimentChart"></canvas>
             </div>
         </div>
     </div>
@@ -111,6 +111,7 @@
         const salesCountByDay = JSON.parse('{{ salesCountByDay|raw }}');
         const phonesSoldByDay = JSON.parse('{{ phonesSoldByDay|raw }}');
         const salesByMonth = JSON.parse('{{ salesByMonth|raw }}');
+        const sentimentStats = JSON.parse('{{ sentimentStats|raw }}');
 
         // Calcul des totaux
         const totalSales = salesCountByDay.reduce((acc, curr) => acc + curr.sales_count, 0);
@@ -146,15 +147,6 @@
 
         // Graphiques
         createChart(
-            document.getElementById('reviewsByDayChart').getContext('2d'),
-            'bar',
-            dates,
-            reviewsByDay,
-            'Reviews par Jour',
-            'rgba(54, 162, 235, '
-        );
-
-        createChart(
             document.getElementById('salesByDayChart').getContext('2d'),
             'bar',
             salesCountByDay.map(entry => entry.day),
@@ -180,7 +172,15 @@
             'Ventes par Mois',
             'rgba(255, 99, 132, '
         );
-        
+
+        createChart(
+            document.getElementById('sentimentChart').getContext('2d'),
+            'bar',
+            Object.keys(sentimentStats),
+            Object.values(sentimentStats),
+            'Gravité des retours',
+            'rgba(54, 162, 235, '
+        );
     </script>
 </body>
 </html>

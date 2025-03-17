@@ -49,27 +49,32 @@ class ReviewsRepository extends ServiceEntityRepository
             'comments_by_user' => $commentsByUser[$result['day']->format('Y-m-d')] ?? [] // Récupérer les commentaires de ce jour
         ], $results);
     }
-    public function getMostFrequentWords(): array
+    public function getSentimentStatistics(): array
     {
-        $reviews = $this->createQueryBuilder('r')
-            ->select('r.comment')
-            ->getQuery()
-            ->getResult();
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT r.sentiment FROM App\Entity\Reviews r'
+        );
 
-        $wordCount = [];
+        $results = $query->getResult();
 
-        foreach ($reviews as $review) {
-            $words = explode(' ', strtolower(strip_tags($review['comment'])));
-            foreach ($words as $word) {
-                if (strlen($word) > 3) { // Ignorer les petits mots
-                    $wordCount[$word] = ($wordCount[$word] ?? 0) + 1;
+        $sentimentCounts = [];
+
+        foreach ($results as $result) {
+            foreach ($result['sentiment'] as $sentiment) {
+                if (isset($sentimentCounts[$sentiment])) {
+                    $sentimentCounts[$sentiment]++;
+                } else {
+                    $sentimentCounts[$sentiment] = 1;
                 }
             }
         }
 
-        arsort($wordCount); // Trier par fréquence
-        return array_slice($wordCount, 0, 10, true); // Top 10
+        arsort($sentimentCounts); // Trie les sentiments du plus fréquent au moins fréquent
+
+        return $sentimentCounts;
     }
+
     
 
     
