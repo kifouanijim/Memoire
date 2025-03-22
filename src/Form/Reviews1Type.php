@@ -14,7 +14,6 @@ class Reviews1Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            //->add('user_id')
             ->add('product_id')
             ->add('comment')
             ->add('sentiment', ChoiceType::class, [
@@ -23,14 +22,12 @@ class Reviews1Type extends AbstractType
                     'Urgent' => 'urgent',
                     'Prioritaire' => 'prioritaire',
                 ],
-                'expanded' => true, // Affichage sous forme de cases à cocher
-                'multiple' => true, // Permet de sélectionner plusieurs valeurs
-                ])
-            ->add('user', HiddenType::class, [ // Champ caché pour stocker l'ID utilisateur
+                'expanded' => true,  // Affichage sous forme de boutons radio
+                'multiple' => false, // Un seul choix possible
+            ])
+            ->add('user', HiddenType::class, [
                 'mapped' => false, 
             ]);
-            
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

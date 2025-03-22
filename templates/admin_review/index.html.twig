@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Analyse des Avis{% endblock %}
+
+{% block body %}
+<h1>Analyse des Avis Clients</h1>
+
+<table border="1" style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #f4f4f4;">
+            <th>ID</th>
+            <th>Utilisateur</th>
+            <th>Produit</th>
+            <th>Commentaire</th>
+            <th>Sentiment</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+            <tr>
+                <td>{{ review.id }}</td>
+                <td>{{ review.user.email }}</td>
+                <td>{{ review.getProductId() }}</td>
+                <td>{{ review.comment }}</td>
+                <td>
+                    {% if review.sentiment == 'normal' %}🟢 Normal{% endif %}
+                    {% if review.sentiment == 'urgent' %}🟠 Urgent{% endif %}
+                    {% if review.sentiment == 'prioritaire' %}🔴 Prioritaire{% endif %}
+                </td>
+                <td>{{ review.createdAt|date('d/m/Y H:i') }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Analyse des Sentiments</h2>
+
+<!-- Affichage des statistiques -->
+<div id="sentimentStats">
+    <p><strong>Total des avis :</strong> <span id="totalReviews">{{ reviews|length }}</span></p>
+    <p><strong>Normal :</strong> <span id="normalCount">{{ sentiments.normal }}</span> (<span id="normalPercentage">{{ (sentiments.normal / reviews|length) * 50 | number_format(2) }}</span>%)</p>
+    <p><strong>Urgent :</strong> <span id="urgentCount">{{ sentiments.urgent }}</span> (<span id="urgentPercentage">{{ (sentiments.urgent / reviews|length) * 50 | number_format(2) }}</span>%)</p>
+    <p><strong>Prioritaire :</strong> <span id="prioritaireCount">{{ sentiments.prioritaire }}</span> (<span id="prioritairePercentage">{{ (sentiments.prioritaire / reviews|length) * 50 | number_format(2) }}</span>%)</p>
+</div>
+
+<!-- Canvas for the Pie Chart -->
+<canvas id="sentimentChart"></canvas>
+
+{% block stylesheets %}
+    <style>
+        /* CSS pour ajuster la taille du graphique */
+        #sentimentChart {
+            width: 400px;  /* Largeur personnalisée */
+            height: 300px; /* Hauteur personnalisée */
+            margin: 20px auto;  /* Centrer le graphique */
+        }
+    </style>
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const sentiments = {{ sentiments|json_encode|raw }};
+    const ctx = document.getElementById('sentimentChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Normal', 'Urgent', 'Prioritaire'],
+            datasets: [{
+                data: [sentiments.normal, sentiments.urgent, sentiments.prioritaire],
+                backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
+            }]
+        }
+    });
+</script>
+
+{% endblock %}
