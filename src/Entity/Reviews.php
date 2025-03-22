@@ -1,5 +1,7 @@
 <?php
 
+// src/Entity/Reviews.php
+
 namespace App\Entity;
 
 use App\Repository\ReviewsRepository;
@@ -23,7 +25,6 @@ class Reviews
 
     #[ORM\Column(type: Types::JSON)]
     private array $sentiment = [];
-
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -75,13 +76,16 @@ class Reviews
         return $this->sentiment;
     }
 
-    public function setSentiment(array $sentiment): static
+    public function setSentiment($sentiment): static
     {
+        // Vérification si sentiment est un tableau et le convertir si nécessaire
+        if (!is_array($sentiment)) {
+            $sentiment = [$sentiment];
+        }
+
         $this->sentiment = $sentiment;
         return $this;
     }
-
-    
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {

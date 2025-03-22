@@ -30,37 +30,31 @@ final class ReviewsController extends AbstractController
         $review = new Reviews();
         $form = $this->createForm(Reviews1Type::class, $review);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             if ($user) {
                 $review->setUser($user);
             }
-
+    
+            // Récupération de la valeur du sentiment (c'est une chaîne, pas un tableau)
             $sentiment = $form->get('sentiment')->getData();
-
-            // Vérification et conversion en tableau si nécessaire
-            if (is_string($sentiment)) {
-                $sentiment = array_map('trim', explode(',', $sentiment));
-            }
-
-            if (!is_array($sentiment)) {
-                $sentiment = [$sentiment];
-            }
-
+    
+            // Pas besoin de manipuler ou de convertir sentiment en tableau, c'est une chaîne
             $review->setSentiment($sentiment);
-
+    
             $entityManager->persist($review);
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_reviews_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->render('reviews/new.html.twig', [
             'review' => $review,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_reviews_show', methods: ['GET'])]
     public function show(Reviews $review): Response

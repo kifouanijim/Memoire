@@ -14,20 +14,20 @@ class Reviews1Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('product_id')
-            ->add('comment')
-            ->add('sentiment', ChoiceType::class, [
-                'choices'  => [
-                    'Normal' => 'normal',
-                    'Urgent' => 'urgent',
-                    'Prioritaire' => 'prioritaire',
-                ],
-                'expanded' => true,  // Affichage sous forme de boutons radio
-                'multiple' => false, // Un seul choix possible
-            ])
-            ->add('user', HiddenType::class, [
-                'mapped' => false, 
-            ]);
+        ->add('product_id')
+        ->add('comment')
+        ->add('sentiment', ChoiceType::class, [
+            'choices' => [
+                'Normal' => 'normal',
+                'Urgent' => 'urgent',
+                'Prioritaire' => 'prioritaire',
+            ],
+            'expanded' => true,  // Affichage sous forme de boutons radio
+            'multiple' => true, // Permettre plusieurs choix (si vous voulez des cases à cocher)
+        ])
+        ->add('user', HiddenType::class, [
+            'mapped' => false,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

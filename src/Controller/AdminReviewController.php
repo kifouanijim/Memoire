@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminReviewController extends AbstractController
 {
-    #[Route('/reviews', name: 'admin_reviews')]
+    #[Route('/reviewsAnalyse', name: 'admin_reviews')]
     public function index(ReviewsRepository $reviewsRepository)
     {
         // Récupérer toutes les critiques
