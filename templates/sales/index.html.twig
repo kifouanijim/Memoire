@@ -1,38 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sales index{% endblock %}
+{% block title %}RI{% endblock %}
 
 {% block body %}
-    <h1>Sales index</h1>
+    <h1>RI</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Product_id</th>
-                <th>Quantity</th>
-                <th>Total_price</th>
-                <th>actions</th>
+                <th>Nom</th>
+                <th>Nombre</th>
+                <th>Prix</th>
+                <th>Crée le</th>
             </tr>
         </thead>
         <tbody>
         {% for sale in sales %}
             <tr>
                 <td>{{ sale.productId }}</td>
-                <td>{{ sale.quantity }}</td>
-                <td>{{ sale.totalPrice }}</td>
+                <td>{{ sale.nombre }}</td>  <!-- Utilisez `nombre` pour la quantité -->
+                <td>{{ sale.prix }}</td>  <!-- Utilisez `totalPrice` pour le prix total -->
                 <td>
-                    <a href="{{ path('app_sales_show', {'id': sale.id}) }}">show</a>
-                    <a href="{{ path('app_sales_edit', {'id': sale.id}) }}">edit</a>
+                    <a href="{{ path('app_sales_show', {'id': sale.id}) }}">Voir</a>
+                    <a href="{{ path('app_sales_edit', {'id': sale.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="4">pas de RI trouvé</td>  <!-- Correction de `colspan` de 6 à 4 -->
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_sales_new') }}">Create new</a>
-    <a href="{{ path('app_dashboard') }}">back to list</a>
+    <a href="{{ path('app_sales_new') }}">Nouveau RI</a>
+    <a href="{{ path('app_dashboard') }}">Retour à la liste</a>
 {% endblock %}

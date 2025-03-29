@@ -19,10 +19,10 @@ class Sales
     private ?string $product_id = null;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    private ?int $nombre = null;  // Quantité de produits vendus
 
     #[ORM\Column]
-    private ?float $total_price = null;
+    private ?float $prix = null;  // Prix par produit
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]  // Assure que la date ne change pas après création
     private ?\DateTimeImmutable $sale_date = null;
@@ -58,25 +58,25 @@ class Sales
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getNombre(): ?int
     {
-        return $this->quantity;
+        return $this->nombre;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setNombre(int $nombre): static
     {
-        $this->quantity = $quantity;
+        $this->nombre = $nombre;
         return $this;
     }
 
-    public function getTotalPrice(): ?float
+    public function getPrix(): ?float
     {
-        return $this->total_price;
+        return $this->prix;
     }
 
-    public function setTotalPrice(float $total_price): static
+    public function setPrix(float $prix): static
     {
-        $this->total_price = $total_price;
+        $this->prix = $prix;
         return $this;
     }
 
@@ -89,5 +89,14 @@ class Sales
     public function setSaleDate(): void
     {
         $this->sale_date = new \DateTimeImmutable();
+    }
+
+    #[ORM\PrePersist]
+    public function setTotalPriceFromQuantityAndPrice(): void
+    {
+        // Calculer le prix total (nombre * prix par produit)
+        if ($this->nombre && $this->prix) {
+            $this->total_price = $this->nombre * $this->prix;
+        }
     }
 }

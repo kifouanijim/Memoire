@@ -30,8 +30,8 @@ class SalesType extends AbstractType
             'placeholder' => 'Sélectionnez un iPhone',
             'required' => true,
         ])
-            ->add('quantity')
-            ->add('total_price')
+            ->add('nombre')
+            ->add('prix')
             ->add('user', HiddenType::class, [ // Champ caché pour stocker l'ID utilisateur
                 'mapped' => false, 
             ]);
