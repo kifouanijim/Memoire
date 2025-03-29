@@ -12,7 +12,6 @@
             <th>Utilisateur</th>
             <th>Produit</th>
             <th>Commentaire</th>
-            <th>Sentiment</th>
             <th>Date</th>
         </tr>
     </thead>
@@ -21,14 +20,15 @@
             <tr>
                 <td>{{ review.id }}</td>
                 <td>{{ review.user.email }}</td>
-                <td>{{ review.getProductId() }}</td>
-                <td>{{ review.comment }}</td>
-                <td>
-                    {% if review.sentiment == 'normal' %}🟢 Normal{% endif %}
-                    {% if review.sentiment == 'urgent' %}🟠 Urgent{% endif %}
-                    {% if review.sentiment == 'prioritaire' %}🔴 Prioritaire{% endif %}
-                </td>
+                <td>{{ review.getIMEI() }}</td>
+                <td>{{ review.commentaire }}</td>
                 <td>{{ review.createdAt|date('d/m/Y H:i') }}</td>
+
+                <td>
+                    {% if review.niveau == 'normal' %}🟢 Normal{% endif %}
+                    {% if review.niveau == 'urgent' %}🟠 Urgent{% endif %}
+                    {% if review.niveau == 'prioritaire' %}🔴 Prioritaire{% endif %}
+                </td>
             </tr>
         {% endfor %}
     </tbody>

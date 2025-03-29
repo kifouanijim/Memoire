@@ -23,7 +23,7 @@ class AdminReviewController extends AbstractController
 
         // Compter le nombre de chaque sentiment
         foreach ($reviews as $review) {
-            $sentiment = $review->getSentiment(); // Si 'getSentiment()' retourne un tableau, nous devons le gérer correctement
+            $sentiment = $review->getNiveau(); // Si 'getSentiment()' retourne un tableau, nous devons le gérer correctement
             if (is_array($sentiment)) {
                 // Si le sentiment est un tableau, on l'itère pour compter chaque sentiment
                 foreach ($sentiment as $sent) {

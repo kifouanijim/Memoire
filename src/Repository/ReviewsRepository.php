@@ -30,7 +30,7 @@ class ReviewsRepository extends ServiceEntityRepository
 
         // Récupérer les commentaires et les utilisateurs associés
         $qbComments = $this->createQueryBuilder('r')
-            ->select("r.created_at AS day", "r.comment", "u.username") // Récupérer le nom de l'utilisateur et le commentaire
+            ->select("r.created_at AS day", "r.commentaire", "u.username") // Récupérer le nom de l'utilisateur et le commentaire
             ->join('r.user', 'u') // Joindre avec la table des utilisateurs
             ->orderBy('day', 'ASC');
         
@@ -39,7 +39,7 @@ class ReviewsRepository extends ServiceEntityRepository
         // Organiser les commentaires par utilisateur et par jour
         $commentsByUser = [];
         foreach ($commentsResults as $row) {
-            $commentsByUser[$row['day']->format('Y-m-d')][$row['username']][] = $row['comment'];
+            $commentsByUser[$row['day']->format('Y-m-d')][$row['username']][] = $row['commentaire'];
         }
 
         // Ajouter les commentaires et les utilisateurs aux résultats principaux
@@ -53,7 +53,7 @@ class ReviewsRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-            'SELECT r.sentiment FROM App\Entity\Reviews r'
+            'SELECT r.niveau FROM App\Entity\Reviews r'
         );
 
         $results = $query->getResult();
@@ -61,7 +61,7 @@ class ReviewsRepository extends ServiceEntityRepository
         $sentimentCounts = [];
 
         foreach ($results as $result) {
-            foreach ($result['sentiment'] as $sentiment) {
+            foreach ($result['niveau'] as $sentiment) {
                 if (isset($sentimentCounts[$sentiment])) {
                     $sentimentCounts[$sentiment]++;
                 } else {

@@ -46,7 +46,7 @@ public function getSalesCountByDay(): array
     $sql = "
         SELECT DATE(sale_date) AS day, 
                COUNT(id) AS sales_count, 
-               SUM(quantity) AS total_phones_sold
+               SUM(nombre) AS total_phones_sold
         FROM sales
         GROUP BY day
         ORDER BY day ASC
@@ -65,7 +65,7 @@ public function getSalesCountByMonth(): array
 
     $sql = "
         WITH months AS (
-            SELECT DATE_FORMAT(sale_date, '%Y-%m') AS month, SUM(quantity) AS sales_count
+            SELECT DATE_FORMAT(sale_date, '%Y-%m') AS month, SUM(nombre) AS sales_count
             FROM sales
             GROUP BY month
         )
