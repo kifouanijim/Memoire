@@ -18,13 +18,13 @@ class Reviews
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $product_id = null;
+    private ?int $IMEI = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $comment = null;
+    private ?string $commentaire = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $sentiment = [];
+    private array $niveau = []; // Correction du nom
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -33,57 +33,46 @@ class Reviews
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getProductId(): ?int
+    public function getIMEI(): ?int
     {
-        return $this->product_id;
+        return $this->IMEI;
     }
 
-    public function setProductId(int $product_id): static
+    public function setIMEI(int $IMEI): static
     {
-        $this->product_id = $product_id;
+        $this->IMEI = $IMEI;
         return $this;
     }
 
-    public function getComment(): ?string
+    public function getCommentaire(): ?string
     {
-        return $this->comment;
+        return $this->commentaire;
     }
 
-    public function setComment(string $comment): static
+    public function setCommentaire(string $commentaire): static
     {
-        $this->comment = $comment;
+        $this->commentaire = $commentaire;
         return $this;
     }
 
-    public function getSentiment(): array
+    public function getNiveau(): array
     {
-        return $this->sentiment;
+        return $this->niveau;
     }
 
-    public function setSentiment($sentiment): static
+    public function setNiveau($niveau): static
     {
-        // Vérification si sentiment est un tableau et le convertir si nécessaire
-        if (!is_array($sentiment)) {
-            $sentiment = [$sentiment];
+        // Vérification si niveau est un tableau et le convertir si nécessaire
+        if (!is_array($niveau)) {
+            $niveau = [$niveau];
         }
 
-        $this->sentiment = $sentiment;
+        $this->niveau = $niveau;
         return $this;
     }
 
@@ -96,5 +85,16 @@ class Reviews
     public function setCreatedAtValue(): void
     {
         $this->created_at = new \DateTimeImmutable();
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
     }
 }
