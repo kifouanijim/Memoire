@@ -3,24 +3,161 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #e0f0ff, #ffffff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-container {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+
+    .logo-container img {
+        width: 60px;
+        height: auto;
+    }
+
+    .login-container {
+        width: 400px;
+        background: #f9fcff;
+        padding: 30px 25px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 90, 170, 0.2);
+        animation: fadeIn 0.6s ease-out forwards;
+        text-align: center;
+        border: 1px solid #d3eaff;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-container h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #045394;
+    }
+
+    .input-group {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #045394;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 2px solid #cce6ff;
+        border-radius: 8px;
+        transition: border-color 0.3s;
+        background-color: white;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: #66b3ff;
+        outline: none;
+    }
+
+    .btn.btn-primary {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        cursor: pointer;
+    }
+
+    .btn.btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .signup-link {
+        margin-top: 18px;
+        font-size: 14px;
+    }
+
+    .signup-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+
+    .alert {
+        background-color: #e0f0ff;
+        color: #003366;
+        padding: 12px;
+        border-left: 4px solid #007bff;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .mb-3 {
+        background-color: #e6f3ff;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .mb-3 a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .mb-3 a:hover {
+        text-decoration: underline;
+    }
+</style>
+
 <div class="logo-container">
     <img src="{{ asset('images/images.png') }}" alt="CertiDeal Logo">
 </div>
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-{% endblock %}
-<!-- 🌟 Formulaire -->
+
 <div class="login-container">
     <h1>Connexion</h1>
 
     <form method="post">
         {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
         {% if app.user %}
             <div class="mb-3">
-                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+                Vous êtes connecté en tant que {{ app.user.userIdentifier }},
+                <a href="{{ path('app_logout') }}">Déconnexion</a>
             </div>
         {% endif %}
 
@@ -36,9 +173,7 @@
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <button class="btn btn-primary" type="submit">
-            Se connecter
-        </button>
+        <button class="btn btn-primary" type="submit">Se connecter</button>
 
         <div class="signup-link">
             <p>Pas encore de compte ? <a href="{{ path('app_inscription') }}">Créer un compte</a></p>
