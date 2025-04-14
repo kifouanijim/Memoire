@@ -3,11 +3,48 @@
 {% block title %}Modifier votre retour{% endblock %}
 
 {% block body %}
-    <h1>Modifier</h1>
+    <div class="form-container">
+        <h1>Modifier</h1>
 
-    {{ include('reviews/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('reviews/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_reviews_index') }}">Retour à liste</a>
+        <a href="{{ path('app_reviews_index') }}" class="btn-back">Retour à la liste</a>
 
-    {{ include('reviews/_delete_form.html.twig') }}
+        {{ include('reviews/_delete_form.html.twig') }}
+    </div>
+
+    <style>
+        .form-container {
+            width: 80%;
+            margin: 2rem auto;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 1.5rem;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
 {% endblock %}

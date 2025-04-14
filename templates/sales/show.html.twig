@@ -3,9 +3,79 @@
 {% block title %}Sales{% endblock %}
 
 {% block body %}
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #ffffff);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 2rem;
+            color: #333;
+        }
+
+        table {
+            width: 70%;
+            margin: 2rem auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        a {
+            display: inline-block;
+            margin: 1rem auto;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        .actions {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .delete-form {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+    </style>
+
     <h1>Sales</h1>
 
-    <table class="table">
+    <table>
         <tbody>
             <tr>
                 <th>Id</th>
@@ -16,11 +86,11 @@
                 <td>{{ sale.productId }}</td>
             </tr>
             <tr>
-                <th>nombre</th>
+                <th>Nombre</th>
                 <td>{{ sale.nombre }}</td>
             </tr>
             <tr>
-                <th>prix</th>
+                <th>Prix</th>
                 <td>{{ sale.Prix }}</td>
             </tr>
             <tr>
@@ -30,9 +100,12 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_sales_index') }}">Retour à la liste</a>
+    <div class="actions">
+        <a href="{{ path('app_sales_index') }}">Retour à la liste</a>
+        <a href="{{ path('app_sales_edit', {'id': sale.id}) }}">Modifier</a>
+    </div>
 
-    <a href="{{ path('app_sales_edit', {'id': sale.id}) }}">Modifier</a>
-
-    {{ include('sales/_delete_form.html.twig') }}
+    <div class="delete-form">
+        {{ include('sales/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

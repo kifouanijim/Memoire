@@ -2,6 +2,81 @@
 
 {% block title %}Détails du Retour{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        table.table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table th {
+            background-color: #343a40;
+            color: #fff;
+            width: 30%;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        a.btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <h1>Détails du Retour</h1>
 
@@ -30,8 +105,12 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_reviews_index') }}" class="btn btn-secondary">Retour à la liste</a>
-    <a href="{{ path('app_reviews_edit', {'id': review.id}) }}" class="btn btn-primary">Modifier</a>
+    <div class="mt-3">
+        <a href="{{ path('app_reviews_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_reviews_edit', {'id': review.id}) }}" class="btn btn-primary">Modifier</a>
+    </div>
 
-    {{ include('reviews/_delete_form.html.twig') }}
+    <div class="mt-3">
+        {{ include('reviews/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

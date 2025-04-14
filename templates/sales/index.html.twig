@@ -3,9 +3,175 @@
 {% block title %}RI{% endblock %}
 
 {% block body %}
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f0ff, #ffffff);
+            scroll-behavior: smooth;
+        }
+
+        .navbar {
+            width: 100vw;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #007bff;
+            padding: 1em 2em;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        body {
+            padding-top: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        table {
+            width: 90%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-sm {
+            font-size: 0.875rem;
+            padding: 5px 10px;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .action-links a {
+            margin-right: 10px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+        .bottom-links {
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .bottom-links a {
+            margin: 0 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .bottom-links a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <div class="navbar">
+        <div><strong><a href="{{ path('app_dash') }}">CertiDeal</a></strong></div>
+        <div>
+            <a href="{{ path('app_reviews_index') }}">Retour</a>
+            <a href="{{ path('app_sales_index') }}">Telephone à vendre</a>
+        </div>
+    </div>
+
     <h1>RI</h1>
 
-    <table class="table">
+    <table>
         <thead>
             <tr>
                 <th>Nom</th>
@@ -18,21 +184,23 @@
         {% for sale in sales %}
             <tr>
                 <td>{{ sale.productId }}</td>
-                <td>{{ sale.nombre }}</td>  <!-- Utilisez `nombre` pour la quantité -->
-                <td>{{ sale.prix }}</td>  <!-- Utilisez `totalPrice` pour le prix total -->
-                <td>
+                <td>{{ sale.nombre }}</td>
+                <td>{{ sale.prix }}</td>
+                <td class="action-links">
                     <a href="{{ path('app_sales_show', {'id': sale.id}) }}">Voir</a>
                     <a href="{{ path('app_sales_edit', {'id': sale.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">pas de RI trouvé</td>  <!-- Correction de `colspan` de 6 à 4 -->
+                <td colspan="4" class="text-center">Pas de RI trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_sales_new') }}">Nouveau RI</a>
-    <a href="{{ path('app_dashboard') }}">Retour à la liste</a>
+    <div class="bottom-links">
+        <a href="{{ path('app_sales_new') }}">Nouveau RI</a>
+        <a href="{{ path('app_dashboard') }}">Retour à la liste</a>
+    </div>
 {% endblock %}
