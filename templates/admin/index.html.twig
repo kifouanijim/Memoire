@@ -6,12 +6,48 @@
     <title>Dashboard Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7f6;
+        /* === Style global hérité === */
+        body, html {
             margin: 0;
             padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f0ff, #ffffff);
+            scroll-behavior: smooth;
         }
+
+        body {
+            padding-top: 70px; /* Pour laisser place à la navbar fixed */
+        }
+
+        /* === Navbar === */
+        .navbar {
+            width: 100vw;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #007bff;
+            padding: 1em 2em;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* === Ton style existant === */
         .dashboard-container {
             max-width: 1200px;
             margin: auto;
@@ -65,6 +101,17 @@
     </style>
 </head>
 <body>
+    <!-- ✅ Barre de navigation ajoutée -->
+    <div class="navbar">
+        <div><strong> <a href="{{ path('app_dash') }}">CertiDeal</a></strong></div>
+        <div>
+           <a href="{{ path('app_admin') }}">Statistiques</a>
+            <a href="{{ path('admin_reviews') }}">Analyse</a>
+            <a href="{{ path('app_aidecontact') }}">Aide & Contact</a>
+    </div>
+        </div>
+    </div>
+
     <div class="dashboard-container">
         <div class="header">📊 Tableau de Bord Admin</div>
 
@@ -105,7 +152,6 @@
     </div>
 
     <script>
-        // Récupération des données depuis PHP
         const reviewsByDay = JSON.parse('{{ reviewsByDay|raw }}');
         const dates = JSON.parse('{{ dates|raw }}');
         const salesCountByDay = JSON.parse('{{ salesCountByDay|raw }}');
@@ -113,15 +159,13 @@
         const salesByMonth = JSON.parse('{{ salesByMonth|raw }}');
         const sentimentStats = JSON.parse('{{ sentimentStats|raw }}');
 
-        // Calcul des totaux
         const totalSales = salesCountByDay.reduce((acc, curr) => acc + curr.sales_count, 0);
         const totalPhonesSold = phonesSoldByDay
-        .map(entry => parseInt(entry.total_phones_sold, 10)) // S'assurer que la valeur est bien un nombre
-        .reduce((acc, curr) => acc + curr, 0);
+            .map(entry => parseInt(entry.total_phones_sold, 10))
+            .reduce((acc, curr) => acc + curr, 0);
         document.getElementById("totalSales").innerText = totalSales;
         document.getElementById("totalPhonesSold").innerText = totalPhonesSold;
 
-        // Fonction pour créer un graphique
         function createChart(ctx, type, labels, data, label, color) {
             return new Chart(ctx, {
                 type: type,
@@ -145,7 +189,6 @@
             });
         }
 
-        // Graphiques
         createChart(
             document.getElementById('salesByDayChart').getContext('2d'),
             'bar',
