@@ -30,31 +30,33 @@ final class ReviewsController extends AbstractController
         $review = new Reviews();
         $form = $this->createForm(Reviews1Type::class, $review);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             if ($user) {
                 $review->setUser($user);
             }
-    
-            // Récupération de la valeur du sentiment (c'est une chaîne, pas un tableau)
-            $sentiment = $form->get('sentiment')->getData();
-    
-            // Pas besoin de manipuler ou de convertir sentiment en tableau, c'est une chaîne
-            $review->setSentiment($sentiment);
-    
+
+            // Gestion du champ "niveau"
+            $niveau = $form->get('niveau')->getData();
+            if (!is_array($niveau)) {
+                $niveau = explode(',', $niveau);
+            }
+            $review->setNiveau(array_map('trim', $niveau));
+
+            // Le created_at est automatiquement géré via @ORM\PrePersist
+
             $entityManager->persist($review);
             $entityManager->flush();
-    
+
             return $this->redirectToRoute('app_reviews_index', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('reviews/new.html.twig', [
             'review' => $review,
             'form' => $form,
         ]);
     }
-    
 
     #[Route('/{id}', name: 'app_reviews_show', methods: ['GET'])]
     public function show(Reviews $review): Response
@@ -71,12 +73,12 @@ final class ReviewsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sentiment = $form->get('sentiment')->getData();
-            if (!is_array($sentiment)) {
-                $sentiment = explode(',', $sentiment);
+            $niveau = $form->get('niveau')->getData();
+            if (!is_array($niveau)) {
+                $niveau = explode(',', $niveau);
             }
-            $review->setSentiment(array_map('trim', $sentiment));
-            
+            $review->setNiveau(array_map('trim', $niveau));
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_reviews_index', [], Response::HTTP_SEE_OTHER);
@@ -91,7 +93,7 @@ final class ReviewsController extends AbstractController
     #[Route('/{id}', name: 'app_reviews_delete', methods: ['POST'])]
     public function delete(Request $request, Reviews $review, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$review->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $review->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($review);
             $entityManager->flush();
         }
