@@ -1,3 +1,13 @@
+<style>
+ .btn{
+            background-color: #28a745;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+</style>
+
 {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>

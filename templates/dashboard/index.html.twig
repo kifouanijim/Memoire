@@ -3,85 +3,237 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e0f0ff, #ffffff);
-            scroll-behavior: smooth;
-        }
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #e0f0ff, #ffffff);
+        scroll-behavior: smooth;
+    }
 
+    .navbar {
+    width: 100vw; /* ✅ prend toute la largeur de la fenêtre */
+    box-sizing: border-box; /* ✅ pour inclure le padding dans la largeur totale */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #007bff;
+    padding: 1em 2em; /* plus de padding horizontal pour aérer */
+    color: white;
+    position: relative; /* ou fixed/top si tu veux qu'elle reste visible */
+    }
+    .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    }
+    body {
+        padding-top: 70px; /* Pour ne pas que le contenu passe dessous */
+    }
+
+
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .navbar a:hover {
+        text-decoration: underline;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+
+    .hero {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeSlide 0.7s ease-out forwards;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+        color: #045394;
+        margin-bottom: 10px;
+    }
+
+    .hero p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background: #0056b3;
+    }
+
+    .section {
+        background: #f9fcff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 90, 170, 0.1);
+        border: 1px solid #d3eaff;
+        margin-bottom: 40px;
+        animation: fadeSlide 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .section h2 {
+        font-size: 22px;
+        color: #045394;
+        margin-bottom: 15px;
+    }
+
+    .section p {
+        font-size: 14px;
+        line-height: 1.7;
+        color: #333;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-size: 13px;
+    }
+
+    /* Carousel */
+    .carousel {
+    display: flex;
+    justify-content: center; /* ✅ centre les images horizontalement */
+    align-items: center;     /* centre verticalement si nécessaire */
+    gap: 20px;               /* espace entre les images */
+    flex-wrap: wrap;         /* permet le retour à la ligne si l'écran est petit */
+    padding: 30px 0;
+}
+
+.carousel img {
+    width: 200px;
+    height: auto;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+    .carousel::-webkit-scrollbar {
+        display: none;
+    }
+    .carousel img:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes fadeSlide {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
         .navbar {
-            width: 100vw;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #007bff;
-            padding: 1em 2em;
-            color: white;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: 500;
-            font-size: 14px;
+        .carousel img {
+            width: 85%;
+            margin: 0 auto;
         }
 
-        .navbar a:hover {
-            text-decoration: underline;
+        .section, .hero {
+            text-align: left;
         }
+    }
+</style>
 
-        body {
-            padding-top: 70px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 2.5rem;
-            color: #333;
-        }
-
-        .dashboard-wrapper {
-            padding: 2rem;
-        }
-
-        .dashboard-wrapper a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .dashboard-wrapper a:hover {
-            background-color: #0056b3;
-        }
-    </style>
 
     <div class="navbar">
         <div><strong>CertiDeal</a></strong></div>
         <div>
             <a href="{{ path('app_reviews_index') }}">Retour</a>
             <a href="{{ path('app_sales_index') }}">Telephone à vendre</a>
+            <a href="{{ path('app_logout') }}">Deconnexion</a>
         </div>
     </div>
 
-    <div class="dashboard-wrapper">
-        <h1>Bienvenue</h1>
-      
-        <div class="dashboard-links">
-            <!-- Liens supplémentaires ici -->
-        </div>
+   <div class="container">
+    <div class="hero">
+        <h1>Bienvenue chez CertiDeal</h1>
+        <p>Votre expert en reconditionnement et revente de smartphones.</p>
+        <a href="#about" class="btn">En savoir plus</a>
     </div>
+
+    <div class="carousel">
+        <img src="{{ asset('images/image1.jpg') }}" alt="Produit 1">
+        <img src="{{ asset('images/img1.jpg') }}" alt="Produit 2">
+        <img src="{{ asset('images/img2.jpg') }}" alt="Produit 3">
+    </div>
+
+    <div class="section" id="about">
+        <h2>Qui sommes-nous ?</h2>
+        <p>
+            CertiDeal est une entreprise spécialisée dans la vente de smartphones reconditionnés de qualité. Fondée avec la mission de rendre la technologie
+            accessible à tous tout en respectant l’environnement, nous proposons des produits testés, certifiés et garantis.
+        </p>
+        <p>
+            Nos techniciens qualifiés assurent un contrôle rigoureux de chaque appareil : plus de 30 points de contrôle sont vérifiés avant la mise en vente.
+            Nous mettons un point d'honneur à garantir la qualité, la sécurité et la satisfaction de nos clients.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Notre mission</h2>
+        <p>
+            Chez CertiDeal, notre objectif est double :
+            <ul>
+                <li>• Offrir des smartphones reconditionnés à des prix accessibles</li>
+                <li>• Réduire l’empreinte écologique de l’industrie électronique</li>
+            </ul>
+            Acheter chez nous, c’est faire un choix économique et responsable.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Nos engagements</h2>
+        <p>
+            ✔️ 100% de nos produits sont testés et garantis 24 mois.<br>
+            ✔️ Livraison rapide et gratuite en France.<br>
+            ✔️ Service client basé en France, disponible et à l’écoute.<br>
+            ✔️ Paiement sécurisé et satisfait ou remboursé.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Pourquoi choisir CertiDeal ?</h2>
+        <p>
+            Choisir CertiDeal, c’est faire confiance à une entreprise française qui place l’humain et l’environnement au cœur de ses valeurs.
+            Nous avons déjà convaincu plus de 500 000 clients satisfaits à travers l’Europe.
+        </p>
+    </div>
+</div>
+
+<footer>
+    © {{ "now"|date("Y") }} CertiDeal — Tous droits réservés.
+</footer>
 {% endblock %}
+
